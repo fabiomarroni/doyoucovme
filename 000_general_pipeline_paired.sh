@@ -1,11 +1,5 @@
 #!/bin/bash
 
-########################################
-#Private stuff
-#remove when publishing!
-#website for large ascii words: http://patorjk.com/software/taag/#p=display&f=Big&t=seqtk
-#
-########################################
 
 #We assume that you have the following software packages installed (links provided)
 # bbduk: https://sourceforge.net/projects/bbmap/
@@ -36,8 +30,8 @@
 #Step 1 BBDUK
 BBMAPDIR=/projects/novabreed/share/software/bbmap
 #Paired reads
-read1=SRR8359173_1.fastq.gz
-read2=SRR8359173_2.fastq.gz
+read1=SRR6287060_1.fastq.gz
+read2=SRR6287060_2.fastq.gz
 prefix1=${read1/.fastq.gz/}
 prefix2=${read2/.fastq.gz/}
 trimmed_dir=../trimmed
