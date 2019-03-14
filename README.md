@@ -1,6 +1,6 @@
 # doyoucovme
 Standard analysis pipeline for the paper "Do you cov me?"
-
+Details on requirements and usage are provided in the script itself.
 
 # License and citations
 The pipeline is distributed under GPL-3.0 (https://opensource.org/licenses/GPL-3.0)
