@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#This is a standard pipeline analysis used in the paper: 
+#This is a basic pipeline analysis used in the paper: 
 #"Do you cov me? Effect of coverage reduction on species identification and 
 #genome reconstruction in complex biological matrices by metagenome shotgun high-throughput sequencing" 
 
-#Author: Fabio Marroni
+#Author: Fabio Marroni (marroni@appliedgenomics.org)
 
 #We assume that you have the following software packages installed (links provided)
 # bbduk: https://sourceforge.net/projects/bbmap/
