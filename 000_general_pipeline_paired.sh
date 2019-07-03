@@ -1,15 +1,19 @@
 #!/bin/bash
 
-#This is a basic pipeline analysis used in the paper: 
-#"Do you cov me? Effect of coverage reduction on species identification and 
-#genome reconstruction in complex biological matrices by metagenome shotgun high-throughput sequencing" 
+#######################################################################################################################
+# The pipeline is distributed under GPL-3.0 (https://opensource.org/licenses/GPL-3.0)
+#
+# If you use the pipeline for a published work, please cite:
+#
+# Cattonaro F., Spadotto A., Radovic S., Marroni F.: Do you cov me? Effect of coverage reduction on species identification and genome reconstruction in complex biological matrices by metagenome shotgun high-throughput sequencing. F1000Research 2018, 7:1767 (https://doi.org/10.12688/f1000research.16804.1)
+#######################################################################################################################
 
-#Author: Fabio Marroni (marroni@appliedgenomics.org)
 
 #We assume that you have the following software packages installed (links provided)
 # bbduk: https://sourceforge.net/projects/bbmap/
 # erne: http://erne.sourceforge.net/
 # kraken: https://ccb.jhu.edu/software/kraken2/index.shtml
+# bracken: https://ccb.jhu.edu/software/bracken/
 # (optional) krona and krona tools: https://github.com/marbl/Krona/wiki 
 # megahit: https://github.com/voutcn/megahit
 # busco: https://busco.ezlab.org/
@@ -20,7 +24,6 @@
 # All commands should be executed from the folder carrying the reads. 
 # All results will be placed in sub-folders at the same level of the "00_reads" directory. 
 
-#Different formats of the read file name may require slight adjustments of the pipeline.
 
 ###################################
 #
@@ -36,8 +39,8 @@
 #Step 1 BBDUK
 BBMAPDIR=/projects/novabreed/share/software/bbmap
 #Paired reads
-read1=SRR6287060_1.fastq.gz
-read2=SRR6287060_2.fastq.gz
+read1=SRR8359173_1.fastq.gz
+read2=SRR8359173_2.fastq.gz
 prefix1=${read1/.fastq.gz/}
 prefix2=${read2/.fastq.gz/}
 trimmed_dir=../trimmed
@@ -98,7 +101,7 @@ seqtk sample -s$REP$HOWMANY $trimmed_dir/${trimread2} $HOWMANY > ../sub_${HOWMAN
 # | . \| | \ \  / ____ \| . \| |____| |\  |
 # |_|\_\_|  \_\/_/    \_\_|\_\______|_| \_|
 ###################################
-#Create database
+#Create database: Steps 4.1 to 4.4 need to be run only once
 KDB=/projects/igats/metagenomics/custom_databases/kraken_nt_2.0.6
 #Step 4.1: Download taxonomy (using interactive nodes)
 kraken2-build --download-taxonomy --db $KDB
@@ -114,7 +117,12 @@ kraken2-build --clean --db $KDB
 mkdir -p ../sub_${HOWMANY}/kraken2
 kraken2 --threads 16 --paired --gzip-compressed --db $KDB ../sub_${HOWMANY}/${prefix1}.fastq.gz ../sub_${HOWMANY}/${prefix2}.fastq.gz --output ../sub_${HOWMANY}/kraken2/${prefix}.kraken --use-names --report ../sub_${HOWMANY}/kraken2/${prefix}.kraken.report.txt
 
-                                          
+#Step 4.6: run bracken
+CLASSIFICATION_LEVEL=S
+READ_LEN=125
+THRSHOLD=10
+bracken -d ${KDB} -i ../sub_${HOWMANY}/kraken2/${prefix}.kraken.report.txt -o ../sub_${HOWMANY}/kraken2/${prefix}_${CLASSIFICATION_LEVEL}.bracken.txt -r ${READ_LEN} -l ${CLASSIFICATION_LEVEL} -t ${THRESHOLD}
+                                        
                                           
 ###################################
 # __  __ ______ _____          _    _ _____ _______ 
